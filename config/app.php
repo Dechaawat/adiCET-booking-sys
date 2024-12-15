@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'aliases' => [
+    'admin' => \App\Http\Middleware\AdminMiddleware::class,
+    'Auth' => Illuminate\Support\Facades\Auth::class,
+],
+
+
+
 ];
