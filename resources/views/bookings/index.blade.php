@@ -37,29 +37,33 @@
                     </td>
                     <td>{{ $booking->reason }}</td>
                     <td>
-                        @if ($booking->status === 'pending')
-                            <form action="{{ route('bookings.approve', $booking->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                            </form>
-                            <form action="{{ route('bookings.reject', $booking->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                            </form>
-                        @else
-                            <span class="badge bg-{{ $booking->status === 'approved' ? 'success' : 'danger' }}">
-                                {{ ucfirst($booking->status) }}
-                            </span>
-                        @endif
-                        <a href="{{ route('bookings.edit', $booking->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this booking?')">Delete</button>
-                        </form>
-                    </td>
+    @if ($booking->status === 'pending' && auth()->user()->role === 'admin')
+        <!-- ปุ่ม Approve และ Reject เฉพาะ Admin -->
+        <form action="{{ route('bookings.approve', $booking->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+        </form>
+        <form action="{{ route('bookings.reject', $booking->id) }}" method="POST" style="display:inline;">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+        </form>
+    @endif
+
+    <!-- ปุ่ม Edit และ Delete สำหรับทุกคน (ทั้ง Admin และ User) -->
+    <a href="{{ route('bookings.edit', $booking->id) }}" class="btn btn-sm btn-warning">Edit</a>
+    <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+    </form>
+
+    <!-- ปุ่ม View สำหรับทุกคน -->
+    <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-sm btn-info">View</a>
+</td>
+
+
                 </tr>
             @empty
                 <tr>
